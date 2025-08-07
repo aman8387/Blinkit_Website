@@ -1,6 +1,6 @@
 {
     "version" : 2,
-    "name" : "Flinkit",
+    "name" : "Blinkit",
     "builds" : [
         {
             "src" : "./index.js",
