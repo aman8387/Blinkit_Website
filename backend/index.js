@@ -1,5 +1,3 @@
-// server.js or index.js
-
 import express from 'express'
 import cors from 'cors'
 import dotenv from 'dotenv'
@@ -21,61 +19,63 @@ import orderRouter from './route/order.route.js'
 
 const app = express()
 
-// ✅ Safe and Flexible CORS setup
+// ✅ CORS Configuration
 app.use(cors({
   origin: function (origin, callback) {
-    const allowed = [
-      process.env.FRONTEND_URL,
-      /^https:\/\/.*\.vercel\.app$/ // Allow any *.vercel.app domain
-    ]
+    const allowedOrigins = [
+      process.env.FRONTEND_URL,             // e.g., http://localhost:5173
+      /^https:\/\/.*\.vercel\.app$/         // any Vercel frontend
+    ];
 
-    // Allow requests without origin (like Postman, curl)
-    if (!origin) return callback(null, true)
+    if (!origin) return callback(null, true); // allow tools like Postman
 
-    const isAllowed = allowed.some(rule =>
-      typeof rule === 'string' ? rule === origin : rule.test(origin)
-    )
+    const isAllowed = allowedOrigins.some(allowed =>
+      typeof allowed === 'string' ? allowed === origin : allowed.test(origin)
+    );
 
     if (isAllowed) {
-      callback(null, true)
+      callback(null, true);
     } else {
-      callback(new Error('❌ Not allowed by CORS: ' + origin))
+      console.error('❌ CORS Blocked:', origin);
+      callback(new Error('Not allowed by CORS'));
     }
   },
   credentials: true
-}))
+}));
 
 // ✅ Middlewares
-app.use(express.json())
-app.use(cookieParser())
-app.use(morgan('dev'))
-app.use(helmet({ crossOriginResourcePolicy: false }))
+app.use(express.json());
+app.use(cookieParser());
+app.use(morgan('dev'));
+app.use(helmet({
+  crossOriginResourcePolicy: false
+}));
 
-// ✅ Debug origin (optional)
+// Optional: Debug log for origin
 app.use((req, res, next) => {
-  console.log('Request Origin:', req.headers.origin)
-  next()
-})
+  console.log('Incoming Origin:', req.headers.origin);
+  next();
+});
 
 // ✅ Routes
 app.get('/', (req, res) => {
-  res.json({ message: `Server is running on port ${PORT}` })
-})
+  res.json({ message: `Server is running on port ${PORT}` });
+});
 
-app.use('/api/user', userRouter)
-app.use('/api/category', categoryRouter)
-app.use('/api/file', uploadRouter)
-app.use('/api/subcategory', subCategoryRouter)
-app.use('/api/product', productRouter)
-app.use('/api/cart', cartRouter)
-app.use('/api/address', addressRouter)
-app.use('/api/order', orderRouter)
+app.use('/api/user', userRouter);
+app.use('/api/category', categoryRouter);
+app.use('/api/file', uploadRouter);
+app.use('/api/subcategory', subCategoryRouter);
+app.use('/api/product', productRouter);
+app.use('/api/cart', cartRouter);
+app.use('/api/address', addressRouter);
+app.use('/api/order', orderRouter);
 
 // ✅ Connect DB and Start Server
-const PORT = process.env.PORT || 8080
+const PORT = process.env.PORT || 8080;
 
 connectDB().then(() => {
   app.listen(PORT, () => {
-    console.log(`✅ Server is running on port ${PORT}`)
-  })
-})
+    console.log(`✅ Server is running on port ${PORT}`);
+  });
+});
