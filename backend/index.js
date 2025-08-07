@@ -22,7 +22,8 @@ const app = express()
 // ✅ Allowed origins for CORS
 const allowedOrigins = [
   process.env.FRONTEND_URL,              // from .env → e.g. https://blinkit-website-rudg.vercel.app
-  'https://blinkit-website-rudg.vercel.app'
+  'https://blinkit-website-rudg.vercel.app',
+  "https://*.vercel.app"
 ]
 
 // ✅ CORS Configuration
