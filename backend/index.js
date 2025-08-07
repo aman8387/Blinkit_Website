@@ -1,3 +1,5 @@
+// server.js or index.js
+
 import express from 'express'
 import cors from 'cors'
 import dotenv from 'dotenv'
@@ -19,20 +21,25 @@ import orderRouter from './route/order.route.js'
 
 const app = express()
 
-// ✅ Allowed origins for CORS
-const allowedOrigins = [
-  process.env.FRONTEND_URL,              // from .env → e.g. https://blinkit-website-rudg.vercel.app
-  'https://blinkit-website-rudg.vercel.app',
-  "https://*.vercel.app"
-]
-
-// ✅ CORS Configuration
+// ✅ Safe and Flexible CORS setup
 app.use(cors({
   origin: function (origin, callback) {
-    if (!origin || allowedOrigins.includes(origin)) {
+    const allowed = [
+      process.env.FRONTEND_URL,
+      /^https:\/\/.*\.vercel\.app$/ // Allow any *.vercel.app domain
+    ]
+
+    // Allow requests without origin (like Postman, curl)
+    if (!origin) return callback(null, true)
+
+    const isAllowed = allowed.some(rule =>
+      typeof rule === 'string' ? rule === origin : rule.test(origin)
+    )
+
+    if (isAllowed) {
       callback(null, true)
     } else {
-      callback(new Error('Not allowed by CORS: ' + origin))
+      callback(new Error('❌ Not allowed by CORS: ' + origin))
     }
   },
   credentials: true
@@ -42,13 +49,11 @@ app.use(cors({
 app.use(express.json())
 app.use(cookieParser())
 app.use(morgan('dev'))
-app.use(helmet({
-  crossOriginResourcePolicy: false
-}))
+app.use(helmet({ crossOriginResourcePolicy: false }))
 
-// ✅ Debug origin log (optional)
+// ✅ Debug origin (optional)
 app.use((req, res, next) => {
-  console.log('Origin:', req.headers.origin)
+  console.log('Request Origin:', req.headers.origin)
   next()
 })
 
