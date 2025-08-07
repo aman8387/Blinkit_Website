@@ -22,8 +22,9 @@ const app = express()
 // ✅ Allowed origins for CORS
 const allowedOrigins = [
   process.env.FRONTEND_URL,              // from .env → e.g. https://blinkit-website-rudg.vercel.app
-  'http://localhost:3000',               // local frontend
-  'https://blinkit-website-rudg-git-main-aman8387s-projects.vercel.app', // fallback vercel domain
+  'http://localhost:3000',
+  'https://blinkit-website-rudg.vercel.app',
+  'https://blinkit-website-rudg-git-main-aman8387s-projects.vercel.app',
 ]
 
 // ✅ CORS Configuration
