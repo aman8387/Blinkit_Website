@@ -24,7 +24,9 @@ const allowedOrigins = [
   process.env.FRONTEND_URL,              // from .env → e.g. https://blinkit-website-rudg.vercel.app
   'http://localhost:3000',
   'https://blinkit-website-rudg.vercel.app',
-  'https://blinkit-website-rudg-git-main-aman8387s-projects.vercel.app',
+  'https://blinkit-website-purjrhn01-aman8387s-projects.vercel.app',
+  'https://blinkit-website-rudg-2ng9sb4ly-aman8387s-projects.vercel.app',
+  'https://blinkit-website-rudg-git-main-aman8387s-projects.vercel.app'
 ]
 
 // ✅ CORS Configuration
